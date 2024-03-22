@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import br.com.api.joyapi.entity.enums.EventEnum;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -21,12 +22,8 @@ import lombok.Data;
 
 @Entity
 @Table(name = "participants")
+@AttributeOverride(name = "id", column = @Column(name = "participant_id"))
 public class Participant extends Person {
-	@Id
-	@GeneratedValue	(strategy = GenerationType.AUTO)
-	@Column(name = "participant_id")
-	private Long id;
-
 	@ManyToMany
     @JoinTable(
         name = "participants_events",

@@ -4,9 +4,12 @@ import java.sql.Date;
 
 import br.com.api.joyapi.entity.enums.GenderEnum;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
 
@@ -19,6 +22,10 @@ public abstract class Person {
 	private Long id;
 	
 	private String name;
+
+	private String username;
+
+	private String password;
 	
 	private String photo;
 	

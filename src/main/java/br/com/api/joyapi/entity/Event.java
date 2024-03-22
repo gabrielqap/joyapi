@@ -22,11 +22,12 @@ public class Event {
 	@Id
 	@GeneratedValue	(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(name = "name")
+
+	private String username;
+
 	private String name;
 	
-	@Column(name = "description", columnDefinition = "TEXT")
+	@Column(columnDefinition = "TEXT")
 	private String description;
 	
 	@Column(name = "created_at")
@@ -35,22 +36,18 @@ public class Event {
 	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column(name = "date")
 	private Date date;
-	
-	@Column(name = "adress")
+
 	private String adress;
-	
-	@Column(name = "city")
+
 	private String city;
 	
-	@Column(name = "state")
 	private String state;
 
 	@ManyToMany(mappedBy = "events")
 	private List<Participant> participants;
 
 	@ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "organizer_id")
     private Organizer organizer;
 }
