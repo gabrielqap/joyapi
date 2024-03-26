@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.api.joyapi.entity.Organizer;
 import br.com.api.joyapi.entity.Participant;
+import br.com.api.joyapi.entity.Person;
 import br.com.api.joyapi.entity.dto.PersonDTO;
 import br.com.api.joyapi.repository.OrganizerRepository;
 import br.com.api.joyapi.repository.ParticipantRepository;
@@ -18,7 +19,7 @@ public class LoginService {
     
     private static PasswordEncoder passwordEncoder;
 
-    public static boolean authenticateUser(PersonDTO personDTO) {
+    public static Person authenticateUser(PersonDTO personDTO) {
         String username = personDTO.getUsername();
         String password = personDTO.getPassword();
         String type = personDTO.getType();
@@ -26,16 +27,16 @@ public class LoginService {
         if (type == "participant"){
             Participant participant = participantRepository.findByUsername(username);
             if(participant != null && passwordEncoder.matches(password, participant.getPassword())) {
-                return true;
+                return participant;
             }
-            return false;
+            return null;
         } else if(type == "organizer"){
             Organizer organizer = organizerRepository.findByUsername(username);
             if (organizer != null && passwordEncoder.matches(password, organizer.getPassword())) {
-                return true; 
+                return organizer; 
             }
-            return false;
+            return null;
         }
-        return false;
+        return null;
     }
 }

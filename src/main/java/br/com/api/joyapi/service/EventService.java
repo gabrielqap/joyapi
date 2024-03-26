@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.ResourceAccessException;
 
 import br.com.api.joyapi.entity.Event;
 import br.com.api.joyapi.repository.EventRepository;
@@ -26,8 +27,31 @@ public class EventService {
     }
 
 
-    public static List<Event> findEventsByOrganizer(Long organizerId) {
-        return repository.findByOrganizerId(organizerId);
+    public static List<Event> findEventsByOrganizerPeriod(Long organizerId, Date startDate, Date endDate) {
+        return repository.findByOrganizerIdAndDateBetween(organizerId, startDate, endDate);
+    }
+
+    public static Event create(Event event){
+        return repository.save(event);
+    }
+
+    public static Event update(Long eventId, Event event) {
+        Event foundEvent = repository.findById(eventId).orElseThrow(() ->
+         new ResourceAccessException("Event not Found"));
+
+        foundEvent.setName(event.getName());
+        foundEvent.setAdress(event.getAdress());
+        foundEvent.setCity(event.getCity());
+        foundEvent.setState(event.getState());
+        foundEvent.setDate(event.getDate());
+        foundEvent.setDescription(event.getDescription());
+        
+        Event updateEvent = repository.save(foundEvent);
+        return updateEvent;
+    }
+
+    public static void delete(Long eventId) {
+        repository.deleteById(eventId);
     }
     
 }

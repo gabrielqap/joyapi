@@ -5,20 +5,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import br.com.api.joyapi.entity.Person;
 import br.com.api.joyapi.entity.dto.PersonDTO;
-import br.com.api.joyapi.entity.dto.ResponseDTO;
 import br.com.api.joyapi.service.LoginService;
 
 public class LoginController {
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody PersonDTO personDTO) {
-        if (LoginService.authenticateUser(personDTO)) {
-            ResponseDTO responseDTO = new ResponseDTO("Successful login!");
-            return ResponseEntity.ok(responseDTO);  
+    public ResponseEntity<Person> login(@RequestBody PersonDTO personDTO) {
+        Person loggedPerson = LoginService.authenticateUser(personDTO);
+        if (loggedPerson != null) {
+            return ResponseEntity.ok(loggedPerson);  
         } else {
-            ResponseDTO responseDTO = new ResponseDTO("Invalid credentials!");
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDTO); // Retorna 401 Unauthorized
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Retorna 401 Unauthorized
         }
     }
 }
