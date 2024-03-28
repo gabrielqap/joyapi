@@ -17,7 +17,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "participants")
+@Table(name = "participant")
 @AttributeOverride(name = "id", column = @Column(name = "participant_id"))
 public class Participant extends Person {
 	@ManyToMany

@@ -4,12 +4,9 @@ import java.sql.Date;
 
 import br.com.api.joyapi.entity.enums.GenderEnum;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -23,11 +20,13 @@ public abstract class Person {
 	@GeneratedValue	(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(nullable = false)
 	private String name;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false, unique = true, updatable = false)
 	private String username;
 
+	@Column(nullable = false)
 	private String password;
 	
 	private String photo;
@@ -37,7 +36,7 @@ public abstract class Person {
 	@Temporal(TemporalType.DATE)
 	private Date birthday;
 	
-	@Column(name = "created_at")
+	@Column(name = "created_at", updatable = false)
 	private Date createdAt;
 
 	@Column(nullable = false, unique = true)

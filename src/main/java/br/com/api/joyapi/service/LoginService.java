@@ -1,7 +1,7 @@
 package br.com.api.joyapi.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import br.com.api.joyapi.entity.Organizer;
 import br.com.api.joyapi.entity.Participant;
@@ -17,7 +17,7 @@ public class LoginService {
     @Autowired
     private static OrganizerRepository organizerRepository;
     
-    private static PasswordEncoder passwordEncoder;
+//private static PasswordEncoder passwordEncoder;
 
     public static Person authenticateUser(PersonDTO personDTO) {
         String username = personDTO.getUsername();
@@ -26,7 +26,7 @@ public class LoginService {
 
         if (type == "participant"){
             Participant participant = participantRepository.findByUsername(username);
-            if(participant != null && passwordEncoder.matches(password, participant.getPassword())) {
+           /*  if(participant != null && passwordEncoder.matches(password, participant.getPassword())) {
                 return participant;
             }
             return null;
@@ -34,7 +34,7 @@ public class LoginService {
             Organizer organizer = organizerRepository.findByUsername(username);
             if (organizer != null && passwordEncoder.matches(password, organizer.getPassword())) {
                 return organizer; 
-            }
+            }/* */
             return null;
         }
         return null;

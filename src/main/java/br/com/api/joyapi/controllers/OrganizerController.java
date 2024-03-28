@@ -1,5 +1,6 @@
 package br.com.api.joyapi.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,13 +14,20 @@ import br.com.api.joyapi.service.OrganizerService;
 @Controller
 @RequestMapping("/organizer")
 public class OrganizerController {
+    private final OrganizerService organizerService;
+
+    @Autowired
+    public OrganizerController(OrganizerService organizerService) {
+        this.organizerService = organizerService;
+    }
     
     @PostMapping("/")
     public ResponseEntity<Organizer> createOrganizer(@RequestBody Organizer organizer){
         try {
-            Organizer savedOrganizer = OrganizerService.create(organizer);
+            Organizer savedOrganizer = organizerService.create(organizer);
             return new ResponseEntity<>(savedOrganizer, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
