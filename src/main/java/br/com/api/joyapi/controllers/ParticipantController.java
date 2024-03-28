@@ -2,6 +2,7 @@ package br.com.api.joyapi.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,9 +19,16 @@ import br.com.api.joyapi.service.ParticipantService;
 @Controller
 @RequestMapping("/participant")
 public class ParticipantController {
+    private final ParticipantService participantService;
+
+    @Autowired
+    public ParticipantController(ParticipantService participantService) {
+        this.participantService = participantService;
+    }
+    
     @GetMapping("/by_event")
 	public ResponseEntity<List<ParticipantDTO>> getByCityAndState(@RequestParam Long eventId) {
-		var participants = ParticipantService.getParticipantsByEventId(eventId);
+		var participants = participantService.getParticipantsByEventId(eventId);
 		if (!participants.isEmpty()) {
             return ResponseEntity.ok(participants);
         } else {
@@ -29,23 +37,23 @@ public class ParticipantController {
 	}
 
     @PostMapping("/")
-    public ResponseEntity<Participant> createParticipant(@RequestParam Participant participant){
+    public ResponseEntity<Object> createParticipant(@RequestParam Participant participant){
         try {
-            Participant savedParticipant = ParticipantService.create(participant);
+            Participant savedParticipant = participantService.create(participant);
             return new ResponseEntity<>(savedParticipant, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{participantId}")
-    public ResponseEntity<Participant> editParticipant(@PathVariable Long participantId, 
+    public ResponseEntity<Object> editParticipant(@PathVariable Long participantId, 
         @RequestParam Participant participant){
         try {
-            Participant savedParticipant = ParticipantService.edit(participantId, participant);
+            Participant savedParticipant = participantService.edit(participantId, participant);
             return new ResponseEntity<>(savedParticipant, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

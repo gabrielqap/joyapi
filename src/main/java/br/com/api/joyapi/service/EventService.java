@@ -4,38 +4,40 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
 
 import br.com.api.joyapi.entity.Event;
 import br.com.api.joyapi.repository.EventRepository;
 
+@Service
 public class EventService {
     
     @Autowired
-	private static EventRepository repository; 
+	private EventRepository repository; 
 
-    public static Object getAllEvents() {
+    public Object getAllEvents() {
         return repository.findAll();
     }
 
-    public static List<Event> getEventsByCityAndState(String city, String state) {
+    public List<Event> getEventsByCityAndState(String city, String state) {
         return repository.findByCityAndState(city, state);
     }
 
-    public static List<Event> getEventsByCityStateAndPeriod(String city, String state, Date startDate, Date endDate){
+    public List<Event> getEventsByCityStateAndPeriod(String city, String state, Date startDate, Date endDate){
         return repository.findByCityAndStateAndDateBetween(city, state, startDate, endDate);
     }
 
 
-    public static List<Event> findEventsByOrganizerPeriod(Long organizerId, Date startDate, Date endDate) {
+    public List<Event> findEventsByOrganizerPeriod(Long organizerId, Date startDate, Date endDate) {
         return repository.findByOrganizerIdAndDateBetween(organizerId, startDate, endDate);
     }
 
-    public static Event create(Event event){
+    public Event create(Event event){
         return repository.save(event);
     }
 
-    public static Event update(Long eventId, Event event) {
+    public Event update(Long eventId, Event event) {
         Event foundEvent = repository.findById(eventId).orElseThrow(() ->
          new ResourceAccessException("Event not Found"));
 
@@ -50,7 +52,7 @@ public class EventService {
         return updateEvent;
     }
 
-    public static void delete(Long eventId) {
+    public void delete(Long eventId) {
         repository.deleteById(eventId);
     }
     

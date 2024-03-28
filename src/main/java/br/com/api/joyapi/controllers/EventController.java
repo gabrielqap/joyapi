@@ -3,6 +3,7 @@ package br.com.api.joyapi.controllers;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,80 +24,100 @@ import br.com.api.joyapi.service.EventService;
 @Controller
 @RequestMapping("/event")
 public class EventController {	
+
+    private final EventService eventService;
+
+    @Autowired
+    public EventController(EventService eventService) {
+        this.eventService = eventService;
+    }
+
 	
 	@GetMapping("/")
 	public ResponseEntity<Object> getAll() {
-		var events = EventService.getAllEvents();
+		var events = eventService.getAllEvents();
 		return ResponseEntity.ok(events);
 	}
 	
 	@GetMapping("/by_city_state")
-	public ResponseEntity<List<Event>> getByCityAndState(@RequestParam String city,
+	public ResponseEntity<Object> getByCityAndState(@RequestParam String city,
             @RequestParam String state) {
-		var events = EventService.getEventsByCityAndState(city, state);
-		if (!events.isEmpty()) {
-            return ResponseEntity.ok(events);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            var events = eventService.getEventsByCityAndState(city, state);
+            if (!events.isEmpty()) {
+                return ResponseEntity.ok(events);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
 
 	@GetMapping("/by_city_state_period")
-	public ResponseEntity<List<Event>> getEventsByCityStateAndPeriod(
+	public ResponseEntity<Object> getEventsByCityStateAndPeriod(
             @RequestParam String city,
             @RequestParam String state,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<Event> events = EventService.getEventsByCityStateAndPeriod(city, state, startDate, endDate);
-        if (!events.isEmpty()) {
-            return ResponseEntity.ok(events);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            List<Event> events = eventService.getEventsByCityStateAndPeriod(city, state, startDate, endDate);
+            if (!events.isEmpty()) {
+                return ResponseEntity.ok(events);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
 	@GetMapping("/by_organizer_period")
-    public ResponseEntity<List<Event>> getEventsByOrganizer(@RequestParam Long organizerId, 
+    public ResponseEntity<Object> getEventsByOrganizer(@RequestParam Long organizerId, 
     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
     @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<Event> events = EventService.findEventsByOrganizerPeriod(organizerId, startDate, endDate);
-        if (!events.isEmpty()) {
-            return ResponseEntity.ok(events);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            List<Event> events = eventService.findEventsByOrganizerPeriod(organizerId, startDate, endDate);
+            if (!events.isEmpty()) {
+                return ResponseEntity.ok(events);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity<Event> createEvent(@RequestBody Event event){
+    public ResponseEntity<Object> createEvent(@RequestBody Event event){
         try {
-            Event savedEvent = EventService.create(event);
+            Event savedEvent = eventService.create(event);
             return new ResponseEntity<>(savedEvent, HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<Event> editEvent(@PathVariable Long eventId,
+    public ResponseEntity<Object> editEvent(@PathVariable Long eventId,
      @RequestBody Event event){
         try{
-            Event updatedEvent = EventService.update(eventId, event); 
+            Event updatedEvent = eventService.update(eventId, event); 
             return ResponseEntity.ok(updatedEvent);   
         } catch (ResourceAccessException e) {
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<HttpStatus> deleteEvent(@PathVariable Long eventId) {
+    public ResponseEntity<Object> deleteEvent(@PathVariable Long eventId) {
         try {
-            EventService.delete(eventId);
+            eventService.delete(eventId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -22,13 +22,12 @@ public class OrganizerController {
     }
     
     @PostMapping("/")
-    public ResponseEntity<Organizer> createOrganizer(@RequestBody Organizer organizer){
+    public ResponseEntity<Object> createOrganizer(@RequestBody Organizer organizer){
         try {
             Organizer savedOrganizer = organizerService.create(organizer);
             return new ResponseEntity<>(savedOrganizer, HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
