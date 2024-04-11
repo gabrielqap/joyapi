@@ -1,13 +1,24 @@
 package br.com.api.joyapi.entity;
 
 import java.sql.Date;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import br.com.api.joyapi.entity.enums.GenderEnum;
+import br.com.api.joyapi.entity.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
@@ -22,12 +33,6 @@ public abstract class Person {
 	
 	@Column(nullable = false)
 	private String name;
-
-	@Column(nullable = false, unique = true, updatable = false)
-	private String username;
-
-	@Column(nullable = false)
-	private String password;
 	
 	private String photo;
 	
@@ -41,5 +46,19 @@ public abstract class Person {
 
 	@Column(nullable = false, unique = true)
 	private String email;
+
+	@OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 	
+	public boolean isUserIdPresent() {
+        return this.getUser() != null && this.getUser().getId() != null;
+    }
+
+    @PrePersist
+    public void validate() {
+        if (!isUserIdPresent()) {
+            throw new IllegalStateException("userId is required");
+        }
+    }
 }

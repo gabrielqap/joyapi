@@ -36,7 +36,7 @@ public class ParticipantController {
         }
 	}
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Object> createParticipant(@RequestParam Participant participant){
         try {
             Participant savedParticipant = participantService.create(participant);

@@ -1,5 +1,7 @@
 package br.com.api.joyapi.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,10 @@ public class OrganizerService {
 
     public Organizer create(Organizer organizer) {
         return repository.save(organizer);
+    }
+
+    public List<Organizer> getAll() {
+        return repository.findAll();
     }
 
 }
