@@ -19,13 +19,13 @@ import br.com.api.joyapi.repository.UserRepository;
 public class AuthorizationService implements UserDetailsService {
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
 
     @Autowired
-    private static TokenService tokenService;
+    private TokenService tokenService;
 
     @Autowired
-    private static AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
