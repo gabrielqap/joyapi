@@ -19,7 +19,7 @@ import br.com.api.joyapi.repository.UserRepository;
 public class AuthorizationService implements UserDetailsService {
 
     @Autowired
-    static UserRepository repository;
+    UserRepository repository;
 
     @Autowired
     private static TokenService tokenService;
@@ -32,7 +32,7 @@ public class AuthorizationService implements UserDetailsService {
         return repository.findByUsername(username);
     }
 
-    public static boolean createNewUser(RegisterDTO data) {
+    public boolean createNewUser(RegisterDTO data) {
         
         if (repository.findByUsername(data.username()) != null) { return false;}
 
@@ -45,7 +45,7 @@ public class AuthorizationService implements UserDetailsService {
 
     }
 
-    public static Object login(AuthenticationDTO data) {
+    public Object login(AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
         var auth = authenticationManager.authenticate(usernamePassword);
                 

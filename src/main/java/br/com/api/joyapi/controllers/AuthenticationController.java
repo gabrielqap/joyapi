@@ -1,5 +1,6 @@
 package br.com.api.joyapi.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,12 @@ import br.com.api.joyapi.service.AuthorizationService;
 @RequestMapping("auth")
 public class AuthenticationController {
 
+    @Autowired
+    AuthorizationService authorizationService;
+
     @PostMapping("/login")
     public ResponseEntity <Object> login (@RequestBody @Validated AuthenticationDTO data){
-        var token = AuthorizationService.login(data);
+        var token = authorizationService.login(data);
 
         return ResponseEntity.ok(token);
     }
@@ -25,7 +29,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity <Object> register (@RequestBody @Validated RegisterDTO data) {
 
-        boolean created = AuthorizationService.createNewUser(data);
+        boolean created = authorizationService.createNewUser(data);
         if(!created){
             return ResponseEntity.badRequest().build();
         }
