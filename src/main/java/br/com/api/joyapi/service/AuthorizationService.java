@@ -21,12 +21,6 @@ public class AuthorizationService implements UserDetailsService {
     @Autowired
     private UserRepository repository;
 
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return repository.findByUsername(username);
@@ -44,13 +38,4 @@ public class AuthorizationService implements UserDetailsService {
         return true;
 
     }
-
-    public Object login(AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
-                
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        return new LoginResponseDTO(token);
-    }
-    
 }
